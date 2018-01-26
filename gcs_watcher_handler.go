@@ -58,7 +58,7 @@ func ReceiveOCNHandleFunc(bucketName, queueName, path string, kindNames []string
 }
 
 // ImportBigQueryHandleFunc returns a http.HandlerFunc that imports GCSObject to BigQuery.
-func ImportBigQueryHandleFunc(datasetID string) http.HandlerFunc {
+func ImportBigQueryHandleFunc(projectID, datasetID string) http.HandlerFunc {
 	// TODO: processWithContext
 	return func(w http.ResponseWriter, r *http.Request) {
 		c := appengine.NewContext(r)
@@ -70,7 +70,7 @@ func ImportBigQueryHandleFunc(datasetID string) http.HandlerFunc {
 		}
 		defer r.Body.Close()
 
-		err = insertImportJob(c, req, datasetID)
+		err = insertImportJob(c, req, projectID, datasetID)
 		if err != nil {
 			log.Errorf(c, "ds2bq: failed to import BigQuery: %s", err)
 			return

@@ -149,7 +149,7 @@ func ReceiveOCN(c context.Context, obj *GCSObject, queueName, path string) error
 	return err
 }
 
-func insertImportJob(c context.Context, req *GCSObjectToBQJobReq, datasetID string) error {
+func insertImportJob(c context.Context, req *GCSObjectToBQJobReq, projectID string, datasetID string) error {
 	log.Infof(c, "ds2bq: bucket: %s, filePath: %s, timeCreated: %s", req.Bucket, req.FilePath, req.TimeCreated)
 
 	if req.Bucket == "" || req.FilePath == "" || req.KindName == "" {
@@ -176,7 +176,7 @@ func insertImportJob(c context.Context, req *GCSObjectToBQJobReq, datasetID stri
 					fmt.Sprintf("gs://%s/%s", req.Bucket, req.FilePath),
 				},
 				DestinationTable: &bigquery.TableReference{
-					ProjectId: appengine.AppID(c),
+					ProjectId: projectID,
 					DatasetId: datasetID,
 					TableId:   req.KindName,
 				},
